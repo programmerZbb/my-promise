@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script src="./my-promise.js"></script>
+    <script>
+        let p = new MyPromise((res, rej) => {
+            // setTimeout(() => {
+            //     res(10)
+            // }, 10)
+            rej(100)
+        })
+        p.then(res => {
+            console.log(res, '第一个res')
+            // throw '我是错误1'
+            return new Promise((res ,rej) => {
+                rej(1111)
+            })
+        }, res => {
+            console.log(res, '第一个rej')
+            // throw '我是错误2'
+            // return('rej给的数据')
+            return new Promise((res ,rej) => {
+                res(2222)
+            })
+        }).then(res => {
+            console.log(res, '链式第二个res')
+        }, rej => {
+            console.log(rej, '链式第二个rej')
+        })
+        // p.then(res => {
+        //     console.log(res, '第二个res')
+        // }, res => {
+        //     console.log(res, '第二个rej')
+        // })
+    </script>
+</body>
+</html>

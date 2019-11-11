@@ -73,5 +73,9 @@
         })
     }
 
+    MyPromise.prototype.catch = function (callback) {
+        
+    }
+
     window.MyPromise = MyPromise
 })(window)

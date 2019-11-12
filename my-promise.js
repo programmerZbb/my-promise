@@ -57,6 +57,11 @@
     MyPromise.prototype.then = function (resolved, rejected) {
         let self = this
 
+        // 成功的回调不处理就 透传
+        resolved = typeof resolved == 'function' ? resolved : (value) => value
+        // 失败的回调不处理  透传
+        rejected = typeof rejected == 'function' ? rejected : (reason) => { throw reason }
+
         return new MyPromise ((onresolved, onrejected) => {
             if (self.status == 'pending') {
                 self.callbacks.push({resolved () {
@@ -74,7 +79,7 @@
     }
 
     MyPromise.prototype.catch = function (callback) {
-        
+        this.then(null, callback)
     }
 
     window.MyPromise = MyPromise

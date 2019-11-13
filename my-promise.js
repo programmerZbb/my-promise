@@ -42,7 +42,7 @@
         setTimeout(() => {
             try {
                 const result = handleFn(data)
-                if (result instanceof Promise) {
+                if (result instanceof MyPromise) {
                     result.then(onresolved, onrejected)
                 } else {
                     onresolved(result)
@@ -80,6 +80,49 @@
 
     MyPromise.prototype.catch = function (callback) {
         this.then(null, callback)
+    }
+
+    MyPromise.resolve = function (value) {
+        return new MyPromise((resolve, reject) => {
+            if (value) {
+                if (value instanceof MyPromise) {
+                    value.then(resolve, reject)
+                } else {
+                    resolve(value)
+                }
+            }
+        })
+    }
+
+    MyPromise.reject = function (reason) {
+        return new MyPromise((resolve, reject) => {
+            reject(reason)
+        })
+    }
+
+    // 只要有一个失败就失败，失败的回调是第一个失败的 reason
+    MyPromise.all = function (promises) {
+        let values = []
+
+        return new MyPromise((resolve, reject) => {
+            promises.forEach((p, index) => {
+                MyPromise.resolve(p).then(value => {
+                    values.push(value)
+                    if (values.length === promises.length) {
+                        resolve(values)
+                    }
+                }, reject)
+            })
+        })
+    }
+
+    // race 是主要有一个 promise 状态变化，就执行 then  里面额回调
+    MyPromise.race = function (promises) {
+        return new MyPromise((resolve, reject) => {
+            promises.forEach(p => {
+                MyPromise.resolve(p).then(resolve, reject)
+            })
+        })
     }
 
     window.MyPromise = MyPromise

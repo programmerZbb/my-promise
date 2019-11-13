@@ -25,7 +25,7 @@
             console.log(res, '第一个rej')
             // throw '我是错误2'
             // return('rej给的数据')
-            return new Promise((res ,rej) => {
+            return new MyPromise((res ,rej) => {
                 res(2222)
             })
         }).then(res => {
@@ -38,6 +38,23 @@
         // }, res => {
         //     console.log(res, '第二个rej')
         // })
+
+        // let pResolve = new MyPromise((res, rej) => {
+        //     rej(111)
+        // })
+        // MyPromise.resolve(pResolve).then(null, rej => {
+        //     console.log(rej, 'resolve 方法')
+        // })
+
+        // MyPromise.reject('失败的').then(null, rej => {
+        //     console.log(rej, 'reject 方法')
+        // })
+
+        MyPromise.all([1, MyPromise.reject(1), 2, MyPromise.resolve(3)]).then(res => {
+            console.log(res, 'all')
+        }, rej => {
+            console.log(rej, 'all rej')
+        })
     </script>
 </body>
 </html>
